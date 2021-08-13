@@ -11,7 +11,7 @@ const RNSelectableText = requireNativeComponent('RNSelectableText')
 const combineHighlights = memoize(numbers => {
   return numbers
     .sort((a, b) => a.start - b.start || a.end - b.end)
-    .reduce(function(combined, next) {
+    .reduce(function (combined, next) {
       if (!combined.length || combined[combined.length - 1].end < next.start) combined.push(next)
       else {
         var prev = combined.pop()
@@ -32,20 +32,22 @@ const combineHighlights = memoize(numbers => {
 const mapHighlightsRanges = (value, highlights) => {
   const combinedHighlights = combineHighlights(highlights)
 
-  if (combinedHighlights.length === 0) return [{ isHighlight: false, text: value }]
+  if (combinedHighlights.length === 0) return [{ isHighlight: false, text: value, id: undefined }]
 
-  const data = [{ isHighlight: false, text: value.slice(0, combinedHighlights[0].start) }]
+  const data = [{ isHighlight: false, text: value.slice(0, combinedHighlights[0].start), id: combinedHighlights[0].id }]
 
-  combinedHighlights.forEach(({ start, end }, idx) => {
+  combinedHighlights.forEach(({ start, end, id }, idx) => {
     data.push({
       isHighlight: true,
       text: value.slice(start, end),
+      id: id
     })
 
     if (combinedHighlights[idx + 1]) {
       data.push({
         isHighlight: false,
         text: value.slice(end, combinedHighlights[idx + 1].start),
+        id: combinedHighlights[idx + 1].id
       })
     }
   })
@@ -53,6 +55,7 @@ const mapHighlightsRanges = (value, highlights) => {
   data.push({
     isHighlight: false,
     text: value.slice(combinedHighlights[combinedHighlights.length - 1].end, value.length),
+    id: combinedHighlights[combinedHighlights.length - 1].id
   })
 
   return data.filter(x => x.text)
@@ -86,20 +89,20 @@ export const SelectableText = ({
   const onHighlightPressNative = onHighlightPress
     ? Platform.OS === 'ios'
       ? ({ nativeEvent: { clickedRangeStart, clickedRangeEnd } }) => {
-          if (!props.highlights || props.highlights.length === 0) return
+        if (!props.highlights || props.highlights.length === 0) return
 
-          const mergedHighlights = combineHighlights(props.highlights)
+        const mergedHighlights = combineHighlights(props.highlights)
 
-          const hightlightInRange = mergedHighlights.find(
-            ({ start, end }) => clickedRangeStart >= start - 1 && clickedRangeEnd <= end + 1,
-          )
+        const hightlightInRange = mergedHighlights.find(
+          ({ start, end }) => clickedRangeStart >= start - 1 && clickedRangeEnd <= end + 1,
+        )
 
-          if (hightlightInRange) {
-            onHighlightPress(hightlightInRange.id)
-          }
+        if (hightlightInRange) {
+          onHighlightPress(hightlightInRange.id)
         }
+      }
       : onHighlightPress
-    : () => {}
+    : () => { }
 
   // highlights feature is only supported if `TextComponent == Text`
   let textValue = value;
@@ -107,26 +110,26 @@ export const SelectableText = ({
     textValue = (
       props.highlights && props.highlights.length > 0
         ? mapHighlightsRanges(value, props.highlights).map(({ id, isHighlight, text }) => (
-            <Text
-              key={v4()}
-              selectable
-              style={
-                isHighlight
-                  ? {
-                      backgroundColor: props.highlightColor,
-                    }
-                  : {}
-              }
-              onPress={() => {
-                if (isHighlight) {
-                  onHighlightPress && onHighlightPress(id)
+          <Text
+            key={v4()}
+            selectable
+            style={
+              isHighlight
+                ? {
+                  backgroundColor: props.highlightColor,
                 }
-              }}
-            >
-              {text}
-            </Text>
-          ))
-      : [value]
+                : {}
+            }
+            onPress={() => {
+              if (isHighlight) {
+                onHighlightPress && onHighlightPress(id)
+              }
+            }}
+          >
+            {text}
+          </Text>
+        ))
+        : [value]
     );
     if (props.appendToChildren) {
       textValue.push(props.appendToChildren);
@@ -141,7 +144,7 @@ export const SelectableText = ({
     >
       <TextComponent
         key={v4()}
-        {...{[textValueProp]: textValue, ...textComponentProps}}
+        {...{ [textValueProp]: textValue, ...textComponentProps }}
       />
     </RNSelectableText>
   )
