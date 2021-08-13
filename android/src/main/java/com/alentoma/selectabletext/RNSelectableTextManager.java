@@ -1,4 +1,4 @@
-package com.astrocoders.selectabletext;
+package com.alentoma.selectabletext;
 
 import android.view.Menu;
 import android.view.MenuItem;

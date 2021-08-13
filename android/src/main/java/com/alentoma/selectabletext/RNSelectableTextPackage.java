@@ -1,6 +1,6 @@
 
 
-package com.astrocoders.selectabletext;
+package com.alentoma.selectabletext;
 
 import java.util.Arrays;
 import java.util.Collections;

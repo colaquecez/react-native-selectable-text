@@ -5,19 +5,22 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "postinstall": "patch-package",
-    "test": "jest"
+    "test": "jest",
+    "android": "react-native run-android --port=8088"
   },
   "dependencies": {
-    "react": "16.6.3",
-    "react-native": "^0.59.0"
+    "react": "^16.13.1",
+    "react-native": "^0.63.4"
   },
   "devDependencies": {
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "24.4.0",
+    "fast-memoize": "^2.5.1",
     "jest": "24.4.0",
     "metro-react-native-babel-preset": "0.53.0",
     "patch-package": "^6.0.5",
-    "react-test-renderer": "16.6.3"
+    "react-test-renderer": "16.6.3",
+    "uuid": "^3.3.2"
   },
   "jest": {
     "preset": "react-native"

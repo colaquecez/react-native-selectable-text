@@ -1,6 +1,7 @@
 
 # react-native-selectable-text
 
+This is the updated version of @astrocoders/react-native-selectable-text.
 ## Demo
 
 ### Android
@@ -14,7 +15,7 @@
 ## Usage
 
 ```javascript
-import { SelectableText } from "@astrocoders/react-native-selectable-text";
+import { SelectableText } from "@alentoma/react-native-selectable-text";
 
 // Use normally, it is a drop-in replacement for react-native/Text
 <SelectableText
@@ -33,31 +34,31 @@ import { SelectableText } from "@astrocoders/react-native-selectable-text";
 
 ## Getting started
 
-`$ npm install @astrocoders/react-native-selectable-text --save`
+`$ npm install @alentoma/react-native-selectable-text --save`
 
 ### Mostly automatic installation
 
-`$ react-native link @astrocoders/react-native-selectable-text`
+`$ react-native link @alentoma/react-native-selectable-text`
 
 ### Manual installation
 
 #### iOS - Binary Linking (Alternative 1)
 
 1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ `@astrocoders/react-native-selectable-text` and add `RNSelectableText.xcodeproj`
+2. Go to `node_modules` ➜ `@alentoma/react-native-selectable-text` and add `RNSelectableText.xcodeproj`
 3. In XCode, in the project navigator, select your project. Add `libRNSelectableText.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
 4. Run your project (`Cmd+R`)<
 
 #### iOS - Pods (Alternative 2)
 
-1. Add `pod 'RNSelectableText', :path => '../node_modules/@astrocoders/react-native-selectable-text/ios/RNSelectableText.podspec'` to your projects podfile
+1. Add `pod 'RNSelectableText', :path => '../node_modules/@alentoma/react-native-selectable-text/ios/RNSelectableText.podspec'` to your projects podfile
 2. run `pod install`
 
 #### Android
 
 1. Open up `android/app/src/main/java/[...]/MainActivity.java`
 
-- Add `import com.astrocoders.selectabletext.RNSelectableTextPackage;` to the imports at the top of the file
+- Add `import com.alentoma.selectabletext.RNSelectableTextPackage;` to the imports at the top of the file
 - Add `new RNSelectableTextPackage()` to the list returned by the `getPackages()` method
 
 2. Append the following lines to `android/settings.gradle`:
