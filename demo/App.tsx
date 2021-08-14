@@ -1,39 +1,91 @@
 import React from "react";
-import { Platform, StyleSheet, View, Text } from "react-native";
-import { SelectableText } from "./SelectableText.js";
+import { Platform, StyleSheet, View, Text, TextInput } from "react-native";
+import { SelectableText } from "./SelectableText";
+import HTML, { CustomTextualRenderer } from 'react-native-render-html';
+import { ScrollView } from "react-native-gesture-handler";
+import { Dimensions } from "react-native";
+const fSize = 30
+var p = {
+  lineHeight: fSize * 1.7,
+  fontSize: fSize,
+  color: "white",
+  paddingBottom: 5,
+  textAlign: "left"
+
+}
+
+var classes = {
+  paddingLeft: fSize * 0.9,
+  paddingRight: fSize * 0.95,
+  backgroundColor: "black",
+  minWidth: Dimensions.get("window").width,
+  minHeight: Dimensions.get("window").height,
+  maxWidth: "99%",
+  overflow: "hidden",
+  flex: 1
+}
+
+
+const DivRenderer: CustomTextualRenderer = function DivRenderer({ TDefaultRenderer, ...props }) {
+  var txt = "";
+  Array.from(props.tnode.domNode?.children ?? []).forEach(x => {
+    if (x.data)
+      txt = x.data;
+  })
+
+  return (
+    <SelectableText
+      textComponentProps={{ multiline: true }}
+      menuItems={["Replace", "Cancel"]}
+      onSelection={console.log}
+      highlightColor={"red"}
+      highlights={[{ start: 0, end: 10, id:"test" }]}
+      style={p}
+      value={txt}
+    />
+  )
+}
 
 export default function App() {
+
   return (
     <View style={styles.container}>
       <Text selectable></Text>
-      <SelectableText
-        selectable={true}
-        menuItems={["Replace", "Bar"]}
-        onSelection={console.log}
-        style={styles.welcome}
-        value="Astrocoders"
-      />
-      <SelectableText
-        menuItems={["Foo", "Bar"]}
-        onSelection={console.log}
-        style={styles.welcome}
-      >
-        Go Beyond
-      </SelectableText>
-      <SelectableText
-        selectable={true}
-        menuItems={["Astro", "Coders"]}
-        onSelection={console.log}
-        style={styles.instructions}
-        value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eleifend laoreet risus nec accumsan. In bibendum urna id ante vehicula auctor. Donec ipsum nisi, malesuada quis erat ac, molestie facilisis lacus. Vestibulum a erat dui. In imperdiet, purus at venenatis fermentum, dui neque congue est, in suscipit metus magna malesuada ex. In hendrerit tincidunt mi, vel rhoncus eros dignissim non. Nulla tincidunt, tortor et dictum fermentum, sapien leo blandit nunc, nec rutrum nulla libero nec elit. Sed vitae urna sed eros volutpat venenatis. Nulla finibus velit ac odio elementum pharetra. Ut mollis metus est, vitae blandit urna venenatis at."
-      />
-      <SelectableText
-        selectable={true}
-        menuItems={["Crave", "Star", "Damage"]}
-        onSelection={console.log}
-        style={styles.instructions}
-        value="Quisque nec faucibus ligula. Nam ut congue mauris. Duis quis risus dolor. Praesent tempor est elit, in pretium risus sodales ac. Cras fermentum aliquam feugiat. Pellentesque in dapibus ex. Suspendisse ut magna maximus, scelerisque dui in, finibus ipsum. Nullam non justo ornare, faucibus lorem non, congue nisl. Cras venenatis ex vitae lacinia posuere. In congue porttitor velit id porta. In fermentum ultricies est nec sagittis. Etiam eget commodo ex, vel placerat nulla. Phasellus porttitor, libero eget ornare pellentesque, ipsum ex ultrices metus, et volutpat neque magna a ante."
-      />
+      <ScrollView>
+        <HTML
+          classesStyles={{
+            chapter: classes
+          }}
+          source={{
+            html: `<div id="chapter-content" class="chapter" style="font-family: Arial, sans-serif, serif; font-size: 18px; line-height: 160%;">
+              <p>Chapter 2165: My Little Heart
+              </p>
+              <p>Translator: EndlessFantasy Translation  Editor: EndlessFantasy Translation</p>
+              <p>“Second Uncle, Second Uncle… Put me down…” Little tangyuan  cried out in her baby voice.              </p>
+              <p>Lu Jingli looked determined. “No way! I’m telling you even if God were here today, He wouldn’t be able to save you!”
+
+              </p>
+              <p>Little tangyuan  begged pitifully, “Second Uncle, I know I’m wrong! Please don’t be angry, okay?”
+
+              </p>
+              <p>Lu Jingli was not moved at all. “Don’t come at me with this. You’ve already said such things over eight hundred times!”
+
+              </p>
+              <p>Little tangyuan  then said, “Second Uncle, you can’t be angry!”
+
+              </p>
+              <p>Lu Jingli then replied, “Why can’t I be angry? I’m about to be angered to death by you!”
+
+              </p>
+              <p>Solemness filled the  tangyuan ‘s delicate little face as she said earnestly, “Even though you look very handsome when you’re angry, Second Uncle, you look even more handsome when you’re not angry!”
+              </p>
+              <p>Alen</p>
+        </div>` }}
+          renderers={{
+            p: DivRenderer
+          }}
+        />
+      </ScrollView>
     </View>
   );
 }
@@ -43,7 +95,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#F5FCFF",
     padding: 10
   },
   welcome: {

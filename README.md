@@ -36,11 +36,24 @@ import { SelectableText } from "@alentoma/react-native-selectable-text";
 
 `$ npm install @alentoma/react-native-selectable-text --save`
 
-### Mostly automatic installation
-
-`$ react-native link @alentoma/react-native-selectable-text`
 
 ### Manual installation
+
+Create react-native.config.js in the root directory and execlude @alentoma/react-native-selectable-text from linking
+
+```
+module.exports = {
+    dependencies: {
+        "@alentoma/react-native-selectable-text": {
+            platforms: {
+                android: null // disable Android platform, other platforms will still autolink if provided,
+                ios: null // disable IOS platform, other platforms will still autolink if provided
+            }
+        }
+    }
+}
+
+```
 
 #### iOS - Binary Linking (Alternative 1)
 
@@ -68,7 +81,7 @@ import { SelectableText } from "@alentoma/react-native-selectable-text";
    ```
 3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
    ```
-     compile project(':react-native-selectable-text')
+     implementation project(':react-native-selectable-text')
    ```
 
 ## Props

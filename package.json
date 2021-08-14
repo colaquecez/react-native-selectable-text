@@ -1,9 +1,8 @@
 {
   "name": "@alentoma/react-native-selectable-text",
-  "version": "1.5.1",
+  "version": "1.5.3",
   "description": "React Native component used to provide the features of pass different context menu items and events",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "index.ts",
   "homepage": "https://github.com/alentoma/react-native-selectable-text",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

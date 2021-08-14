@@ -108,11 +108,6 @@ public class RNSelectableTextManager extends ReactTextViewManager {
 
     @Override
     public Map getExportedCustomDirectEventTypeConstants() {
-        return MapBuilder.builder()
-                .put(
-                        "topSelection",
-                        MapBuilder.of(
-                                "registrationName","onSelection"))
-                .build();
+        return MapBuilder.builder().put("topSelection",MapBuilder.of("registrationName","onSelection")).build();
     }
 }

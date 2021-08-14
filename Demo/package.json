@@ -4,7 +4,7 @@
     "android": "react-native run-android --port=8088",
     "ios": "react-native run-ios",
     "web": "expo start --web",
-    "start": "react-native start",
+    "start": "react-native start --port=8088",
     "test": "jest"
   },
   "dependencies": {
@@ -16,6 +16,7 @@
     "react-native": "~0.63.4",
     "react-native-gesture-handler": "~1.10.2",
     "react-native-reanimated": "~2.1.0",
+    "react-native-render-html": "^6.0.5",
     "react-native-screens": "~3.0.0",
     "react-native-unimodules": "~0.13.3",
     "react-native-web": "~0.13.12"
