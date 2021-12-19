@@ -9,6 +9,7 @@ export interface IHighlights {
   start: number,
   end: number,
   id: string,
+  color?: ColorValue
 }
 
 export interface NativeEvent {
@@ -44,7 +45,8 @@ const combineHighlights = memoize((numbers: IHighlights[]) => {
   return numbers
     .sort((a, b) => a.start - b.start || a.end - b.end)
     .reduce(function (combined, next) {
-      if (!combined.length || combined[combined.length - 1].end < next.start) combined.push(next)
+      if (!combined.length || combined[combined.length - 1].end < next.start)
+        combined.push(next)
       else {
         var prev = combined.pop();
         if (prev)
@@ -52,6 +54,7 @@ const combineHighlights = memoize((numbers: IHighlights[]) => {
             start: prev.start,
             end: Math.max(prev.end, next.end),
             id: next.id,
+            color: prev.color
           })
       }
       return combined
@@ -65,22 +68,24 @@ const combineHighlights = memoize((numbers: IHighlights[]) => {
 const mapHighlightsRanges = (value: string, highlights: IHighlights[]) => {
   const combinedHighlights = combineHighlights(highlights)
 
-  if (combinedHighlights.length === 0) return [{ isHighlight: false, text: value, id: undefined }]
+  if (combinedHighlights.length === 0) return [{ isHighlight: false, text: value, id: undefined, color: undefined }]
 
-  const data = [{ isHighlight: false, text: value.slice(0, combinedHighlights[0].start), id: combinedHighlights[0].id }]
+  const data = [{ isHighlight: false, text: value.slice(0, combinedHighlights[0].start), id: combinedHighlights[0].id, color: combinedHighlights[0].color }]
 
-  combinedHighlights.forEach(({ start, end, id }, idx) => {
+  combinedHighlights.forEach(({ start, end, id, color }, idx) => {
     data.push({
       isHighlight: true,
       text: value.slice(start, end),
-      id: id
+      id: id,
+      color: color
     })
 
     if (combinedHighlights[idx + 1]) {
       data.push({
         isHighlight: false,
         text: value.slice(end, combinedHighlights[idx + 1].start),
-        id: combinedHighlights[idx + 1].id
+        id: combinedHighlights[idx + 1].id,
+        color: combinedHighlights[idx + 1].color
       })
     }
   })
@@ -88,7 +93,8 @@ const mapHighlightsRanges = (value: string, highlights: IHighlights[]) => {
   data.push({
     isHighlight: false,
     text: value.slice(combinedHighlights[combinedHighlights.length - 1].end, value.length),
-    id: combinedHighlights[combinedHighlights.length - 1].id
+    id: combinedHighlights[combinedHighlights.length - 1].id,
+    color: combinedHighlights[combinedHighlights.length - 1].color
   })
 
   return data.filter(x => x.text)
@@ -107,18 +113,20 @@ const mapHighlightsRanges = (value: string, highlights: IHighlights[]) => {
  * textComponentProps: object
  */
 export const SelectableText = ({ onSelection, onHighlightPress, textValueProp, value, TextComponent, textComponentProps, ...props }: SelectableTextProps) => {
-  TextComponent = TextComponent || Text;
+  const TX = (TextComponent = TextComponent || Text) as Function;
   textValueProp = textValueProp || 'children';  // default to `children` which will render `value` as a child of `TextComponent`
   const onSelectionNative = (event: any) => {
-    var nativeEvent =event.nativeEvent as NativeEvent
+    var nativeEvent = event.nativeEvent as NativeEvent
     onSelection && onSelection(nativeEvent);
   }
 
   const onHighlightPressNative = onHighlightPress
     ? Platform.OS === 'ios'
-      ? ({ nativeEvent: { clickedRangeStart, clickedRangeEnd } }) => {
+      ? (
+        {
+          nativeEvent: { clickedRangeStart, clickedRangeEnd }
+        }) => {
         if (!props.highlights || props.highlights.length === 0) return
-
         const mergedHighlights = combineHighlights(props.highlights)
 
         const hightlightInRange = mergedHighlights.find(
@@ -135,11 +143,10 @@ export const SelectableText = ({ onSelection, onHighlightPress, textValueProp, v
   // highlights feature is only supported if `TextComponent == Text`
   let textValue = value as any;
   if (TextComponent == Text) {
-    console.log("Using Text")
     textValue = (
       props.highlights && props.highlights.length > 0
-        ? mapHighlightsRanges(value, props.highlights).map(({ id, isHighlight, text }) => (
-          <Text key={v4()} selectable={true} style={isHighlight ? { backgroundColor: props.highlightColor } : {}} onPress={() => {
+        ? mapHighlightsRanges(value, props.highlights).map(({ id, isHighlight, text, color }) => (
+          <Text key={v4()} selectable={true} style={isHighlight ? { backgroundColor: color ?? props.highlightColor } : {}} onPress={() => {
             if (isHighlight) {
               onHighlightPress && onHighlightPress(id ?? "")
             }
@@ -152,9 +159,10 @@ export const SelectableText = ({ onSelection, onHighlightPress, textValueProp, v
       textValue.push(props.appendToChildren);
     }
   }
+
   return (
     <RNSelectableText {...props} onHighlightPress={onHighlightPressNative} selectable={true} onSelection={onSelectionNative} >
-      <TextComponent key={v4()} {...{ [textValueProp]: textValue, ...textComponentProps }} />
+      <TX key={v4()} {...{ [textValueProp]: textValue, ...textComponentProps }} />
     </RNSelectableText>
   )
 }

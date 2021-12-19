@@ -77,7 +77,7 @@ module.exports = {
 2. Append the following lines to `android/settings.gradle`:
    ```
    include ':react-native-selectable-text'
-   project(':react-native-selectable-text').projectDir = new File(rootProject.projectDir, 	'../node_modules/@astrocoders/react-native-selectable-text/android')
+   project(':react-native-selectable-text').projectDir = new File(rootProject.projectDir, 	'../node_modules/@alentoma/react-native-selectable-text/android')
    ```
 3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
    ```
