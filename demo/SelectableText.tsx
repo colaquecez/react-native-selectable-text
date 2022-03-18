@@ -146,7 +146,9 @@ export const SelectableText = ({ onSelection, onHighlightPress, textValueProp, v
     textValue = (
       props.highlights && props.highlights.length > 0
         ? mapHighlightsRanges(value, props.highlights).map(({ id, isHighlight, text, color }) => (
-          <Text key={v4()} selectable={true} style={isHighlight ? { backgroundColor: color ?? props.highlightColor } : {}} onPress={() => {
+          <Text key={v4()} {...textComponentProps} selectable={true} style={isHighlight ? { backgroundColor: color ?? props.highlightColor } : {}} onPress={() => {
+            if (textComponentProps && textComponentProps.onPress)
+                textComponentProps.onPress();
             if (isHighlight) {
               onHighlightPress && onHighlightPress(id ?? "")
             }
