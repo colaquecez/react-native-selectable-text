@@ -1,6 +1,6 @@
 {
     "name": "@alentoma/react-native-selectable-text",
-    "version": "1.5.5",
+    "version": "1.5.8",
     "description": "React Native component used to provide the features of pass different context menu items and events",
     "main": "index.ts",
     "homepage": "https://github.com/alentoma/react-native-selectable-text",
