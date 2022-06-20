@@ -26,7 +26,7 @@ export interface SelectableTextProps {
     selectionStart: number;
     selectionEnd: number;
   }) => void;
-
+  prependToChild: ReactNode;
   menuItems: string[];
   highlights?: Array<IHighlights>;
   highlightColor?: ColorValue;
@@ -112,7 +112,7 @@ const mapHighlightsRanges = (value: string, highlights: IHighlights[]) => {
  * TextComponent: ReactNode
  * textComponentProps: object
  */
-export const SelectableText = ({ onSelection, onHighlightPress, textValueProp, value, TextComponent, textComponentProps, ...props }: SelectableTextProps) => {
+export const SelectableText = ({ onSelection, onHighlightPress, textValueProp, value, TextComponent, textComponentProps, prependToChild, ...props }: SelectableTextProps) => {
   const TX = (TextComponent = TextComponent || Text) as Function;
   textValueProp = textValueProp || 'children';  // default to `children` which will render `value` as a child of `TextComponent`
   const onSelectionNative = (event: any) => {
@@ -148,7 +148,7 @@ export const SelectableText = ({ onSelection, onHighlightPress, textValueProp, v
         ? mapHighlightsRanges(value, props.highlights).map(({ id, isHighlight, text, color }) => (
           <Text key={v4()} {...textComponentProps} selectable={true} style={isHighlight ? { backgroundColor: color ?? props.highlightColor } : {}} onPress={() => {
             if (textComponentProps && textComponentProps.onPress)
-                textComponentProps.onPress();
+              textComponentProps.onPress();
             if (isHighlight) {
               onHighlightPress && onHighlightPress(id ?? "")
             }
@@ -160,6 +160,9 @@ export const SelectableText = ({ onSelection, onHighlightPress, textValueProp, v
     if (props.appendToChildren) {
       textValue.push(props.appendToChildren);
     }
+
+    if (prependToChild)
+      textValue = [prependToChild, ...textValue];
   }
 
   return (
