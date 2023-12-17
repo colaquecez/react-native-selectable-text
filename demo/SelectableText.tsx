@@ -1,7 +1,5 @@
 import React, { ReactNode } from 'react'
 import { Text, requireNativeComponent, Platform, TextStyle, StyleProp, TextProps, TextInputProps, ColorValue } from 'react-native'
-import 'react-native-get-random-values'
-import { v4 } from 'uuid'
 import memoize from 'fast-memoize'
 
 
@@ -147,7 +145,7 @@ export const SelectableText = ({ onSelection, onHighlightPress, textValueProp, v
     textValue = (
       props.highlights && props.highlights.length > 0
         ? mapHighlightsRanges(value, props.highlights).map(({ id, isHighlight, text, color }) => (
-          <Text key={v4()} {...textComponentProps} selectable={true} style={isHighlight ? { backgroundColor: color ?? props.highlightColor } : {}} onPress={() => {
+          <Text key={(new Date()).getTime()} {...textComponentProps} selectable={true} style={isHighlight ? { backgroundColor: color ?? props.highlightColor } : {}} onPress={() => {
             if (textComponentProps && textComponentProps.onPress)
               textComponentProps.onPress();
             if (isHighlight) {
@@ -168,7 +166,7 @@ export const SelectableText = ({ onSelection, onHighlightPress, textValueProp, v
 
   return (
     <RNSelectableText {...props} onHighlightPress={onHighlightPressNative} selectable={true} onSelection={onSelectionNative} >
-      <TX key={v4()} {...{ [textValueProp]: textValue, ...textComponentProps }} />
+      <TX key={(new Date()).getTime()} {...{ [textValueProp]: textValue, ...textComponentProps }} />
     </RNSelectableText>
   )
 }
