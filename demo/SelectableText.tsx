@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react'
 import { Text, requireNativeComponent, Platform, TextStyle, StyleProp, TextProps, TextInputProps, ColorValue } from 'react-native'
+import 'react-native-get-random-values'
 import { v4 } from 'uuid'
 import memoize from 'fast-memoize'
 

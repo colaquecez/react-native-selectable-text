@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "fast-memoize": "*",
+        "react-native-get-random-values": "*",
         "uuid": "*"
     }
 }
