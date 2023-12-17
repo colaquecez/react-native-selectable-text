@@ -1,13 +1,13 @@
 /* #if __has_include(<RCTText/RCTTextSelection.h>) */
 /* #import <RCTText/RCTTextSelection.h> */
 /* #else */
-#import "RCTTextSelection.h"
+#import <React/RCTTextSelection.h>
 /* #endif */
 
 /* #if __has_include(<RCTText/RCTUITextView.h>) */
 /* #import <RCTText/RCTUITextView.h> */
 /* #else */
-#import "RCTUITextView.h"
+#import <React/RCTUITextView.h>
 /* #endif */
 
 #import "RNSelectableTextView.h"
@@ -15,7 +15,7 @@
 /* #if __has_include(<RCTText/RCTTextAttributes.h>) */
 /* #import <RCTText/RCTTextAttributes.h> */
 /* #else */
-#import "RCTTextAttributes.h"
+#import <React/RCTTextAttributes.h>
 /* #endif */
 
 #import <React/RCTUtils.h>
@@ -25,7 +25,7 @@
     RCTUITextView *_backedTextInputView;
 }
 
-NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
+NSString *const SELECTOR_CUSTOM = @"_SELECTOR_CUSTOM_";
 
 UITextPosition *selectionStart;
 UITextPosition* beginning;
@@ -33,9 +33,6 @@ UITextPosition* beginning;
 - (instancetype)initWithBridge:(RCTBridge *)bridge
 {
     if (self = [super initWithBridge:bridge]) {
-        // `blurOnSubmit` defaults to `false` for <TextInput multiline={true}> by design.
-        self.blurOnSubmit = NO;
-
         _backedTextInputView = [[RCTUITextView alloc] initWithFrame:self.bounds];
         _backedTextInputView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _backedTextInputView.backgroundColor = [UIColor clearColor];
@@ -98,7 +95,7 @@ UITextPosition* beginning;
     NSMutableArray *menuControllerItems = [NSMutableArray arrayWithCapacity:self.menuItems.count];
 
     for(NSString *menuItemName in self.menuItems) {
-        NSString *sel = [NSString stringWithFormat:@"%@%@", CUSTOM_SELECTOR, menuItemName];
+        NSString *sel = [NSString stringWithFormat:@"%@%@", SELECTOR_CUSTOM, menuItemName];
         UIMenuItem *item = [[UIMenuItem alloc] initWithTitle: menuItemName
                                                       action: NSSelectorFromString(sel)];
 
@@ -220,7 +217,7 @@ UITextPosition* beginning;
 - (void)forwardInvocation:(NSInvocation *)invocation
 {
     NSString *sel = NSStringFromSelector([invocation selector]);
-    NSRange match = [sel rangeOfString:CUSTOM_SELECTOR];
+    NSRange match = [sel rangeOfString:SELECTOR_CUSTOM];
     if (match.location == 0) {
         [self tappedMenuItem:[sel substringFromIndex:17]];
     } else {
@@ -237,7 +234,7 @@ UITextPosition* beginning;
 {
     if(selectionStart != nil) {return NO;}
     NSString *sel = NSStringFromSelector(action);
-    NSRange match = [sel rangeOfString:CUSTOM_SELECTOR];
+    NSRange match = [sel rangeOfString:SELECTOR_CUSTOM];
 
     if (match.location == 0) {
         return YES;
