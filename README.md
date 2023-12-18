@@ -1,8 +1,11 @@
 
 # react-native-selectable-text
 
-This is the updated version of @astrocoders/react-native-selectable-text.
-## Demo
+This is the updated version of @alentoma/react-native-selectable-text.
+
+It fixes a lof of issues that kept it from running on iOS machines. It works with projects that have shareExtensions, works on M1 machines, and I removed old dependencies that were no longer supported.
+
+## Original Astrocoders Demo
 
 ### Android
 
@@ -14,75 +17,58 @@ This is the updated version of @astrocoders/react-native-selectable-text.
 
 ## Usage
 
-```javascript
-import { SelectableText } from "@alentoma/react-native-selectable-text";
+This differs a lot from the way the original project was written. Basically, ignore the value prop and pass text components as children using the `textComponentProps` section.
 
-// Use normally, it is a drop-in replacement for react-native/Text
+Typescript will give you an error saying that you need value to be defined. You do not. PR's to fix this welcome.
+
+The reason we do this is because by using `textComponentsProps`, we can use nested text styles and everything just works. Example:
+
+```javascript
+import { SelectableText } from "@rob117/react-native-selectable-text";
+
+const child = (
+    <Text style={ {color: 'orange'} } { ...props }>
+      This will be orange and selectable
+      <Text style={ { color: 'green' } }>
+        , and this is green and selectable
+      </Text>
+      , and this is orange and will continue to be selectable with no breaks.
+    </Text>
+  );
+
 <SelectableText
-  menuItems={["Foo", "Bar"]}
+  menuItems={["Delete", "Randomize"]}
+  // Use the child we defined above
+  textComponentProps={ { children: child } }
   /* 
     Called when the user taps in a item of the selection menu:
-    - eventType: (string) is the label
+    - eventType: (string) is the label in menu items
     - content: (string) the selected text portion
     - selectionStart: (int) is the start position of the selected text
     - selectionEnd: (int) is the end position of the selected text
    */
   onSelection={({ eventType, content, selectionStart, selectionEnd }) => {}}
-  value="I crave star damage"
-/>;
+/>
 ```
+
+## Important caveat
+
+the `textComponentProps` child property must consist exclusively of `Text` (or similar, like react-native-paper `Text`) fields. If it has, say, a `View` wrapping the text, everything fails.
 
 ## Getting started
 
-`$ npm install @alentoma/react-native-selectable-text --save`
+`$ yarn add @rob117/react-native-selectable-text`
 
+## This project does not auto-link for iOS, you MUST do the following
 
-### Manual installation
+I don't know how to get auto-linking working, so do this instead:
 
-Create react-native.config.js in the root directory and execlude @alentoma/react-native-selectable-text from linking
-
-```
-module.exports = {
-    dependencies: {
-        "@alentoma/react-native-selectable-text": {
-            platforms: {
-                android: null, // disable Android platform, other platforms will still autolink if provided
-                ios: null // disable IOS platform, other platforms will still autolink if provided
-            }
-        }
-    }
-}
-
-```
-
-#### iOS - Binary Linking (Alternative 1)
-
-1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ `@alentoma/react-native-selectable-text` and add `RNSelectableText.xcodeproj`
-3. In XCode, in the project navigator, select your project. Add `libRNSelectableText.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
-4. Run your project (`Cmd+R`)<
-
-#### iOS - Pods (Alternative 2)
-
-1. Add `pod 'RNSelectableText', :path => '../node_modules/@alentoma/react-native-selectable-text/ios/RNSelectableText.podspec'` to your projects podfile
+1. Add `pod 'react-native-selectable-text', :path => '../node_modules/react-native-selectable-text'` to your projects podfile
 2. run `pod install`
 
 #### Android
 
-1. Open up `android/app/src/main/java/[...]/MainActivity.java`
-
-- Add `import com.alentoma.selectabletext.RNSelectableTextPackage;` to the imports at the top of the file
-- Add `new RNSelectableTextPackage()` to the list returned by the `getPackages()` method
-
-2. Append the following lines to `android/settings.gradle`:
-   ```
-   include ':react-native-selectable-text'
-   project(':react-native-selectable-text').projectDir = new File(rootProject.projectDir, 	'../node_modules/@alentoma/react-native-selectable-text/android')
-   ```
-3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
-   ```
-     implementation project(':react-native-selectable-text')
-   ```
+Do nothing. Should actually just work.
 
 ## Props
 | name | description | type | default |
@@ -98,4 +84,3 @@ module.exports = {
 | **TextComponent** | Text component used to render `value` | ReactNode | <Text> |
 | **textValueProp** | text value prop for TextComponent. Should be used when passing TextComponent. Defaults to 'children' which works for <Text> | string | 'children' |
 | **textComponentProps** | additional props to pass to TextComponent | object | null |
-
