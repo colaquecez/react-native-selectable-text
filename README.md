@@ -63,7 +63,7 @@ the `textComponentProps` child property must consist exclusively of `Text` (or s
 
 I don't know how to get auto-linking working, so do this instead:
 
-1. Add `pod 'react-native-selectable-text', :path => '../node_modules/react-native-selectable-text'` to your projects podfile
+1. Add `pod 'react-native-selectable-text', :path => '../node_modules/@rob117/react-native-selectable-text'` to your projects podfile
 2. run `pod install`
 
 #### Android
