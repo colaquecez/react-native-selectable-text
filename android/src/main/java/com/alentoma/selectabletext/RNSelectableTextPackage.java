@@ -1,6 +1,6 @@
 
 
-package com.alentoma.selectabletext;
+package com.rob117.selectabletext;
 
 import java.util.Arrays;
 import java.util.Collections;
