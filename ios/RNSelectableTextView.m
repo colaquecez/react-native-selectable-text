@@ -156,9 +156,15 @@ UITextPosition* beginning;
 
     UITextPosition *selectionEnd = word.end;
 
-    const NSInteger location = [_backedTextInputView offsetFromPosition:beginning toPosition:selectionStart];
-    const NSInteger endLocation = [_backedTextInputView offsetFromPosition:beginning toPosition:selectionEnd];
+    NSInteger location = [_backedTextInputView offsetFromPosition:beginning toPosition:selectionStart];
+    NSInteger endLocation = [_backedTextInputView offsetFromPosition:beginning toPosition:selectionEnd];
 
+    // Ensure that location is not greater than endLocation
+    if (location > endLocation) {
+        NSInteger temp = location;
+        location = endLocation;
+        endLocation = temp;
+    }
     if (location == 0 && endLocation == 0) return;
 
     [_backedTextInputView select:self];
