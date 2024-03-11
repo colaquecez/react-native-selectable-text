@@ -248,31 +248,19 @@ UITextPosition* beginning;
     return NO;
 }
 
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
-{
-    if (!_backedTextInputView.isFirstResponder) {
-        [_backedTextInputView setSelectedTextRange:nil notifyDelegate:true];
-    } else {
-        UIView *sub = nil;
-        for (UIView *subview in self.subviews.reverseObjectEnumerator) {
-            CGPoint subPoint = [subview convertPoint:point toView:self];
-            UIView *result = [subview hitTest:subPoint withEvent:event];
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    UIView *hitView = [super hitTest:point withEvent:event];
+    NSLog(@"Hit Test Start");
 
-            if (!result.isFirstResponder) {
-                NSString *name = NSStringFromClass([result class]);
-
-                if ([name isEqual:@"UITextRangeView"]) {
-                    sub = result;
-                }
-            }
-        }
-
-        if (sub == nil) {
+    // Check if the hit view is not part of the text view's hierarchy
+    if (![_backedTextInputView isDescendantOfView:hitView]) {
+        // If the text view is the first responder and the tap is outside, consider clearing the selection
+        if (_backedTextInputView.isFirstResponder) {
             [_backedTextInputView setSelectedTextRange:nil notifyDelegate:true];
         }
     }
 
-    return [super hitTest:point withEvent:event];
+    return hitView;
 }
 
 @end
