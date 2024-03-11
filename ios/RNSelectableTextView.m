@@ -64,8 +64,6 @@ UITextPosition* beginning;
         [self addSubview:_backedTextInputView];
 
         UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
-
-
         UITapGestureRecognizer *tapGesture = [ [UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
         tapGesture.numberOfTapsRequired = 2;
 
@@ -84,6 +82,7 @@ UITextPosition* beginning;
 
 -(void) _handleGesture
 {
+    // log gesture start
     if (!_backedTextInputView.isFirstResponder) {
         [_backedTextInputView becomeFirstResponder];
     }
@@ -93,6 +92,12 @@ UITextPosition* beginning;
     if (menuController.isMenuVisible) return;
 
     NSMutableArray *menuControllerItems = [NSMutableArray arrayWithCapacity:self.menuItems.count];
+
+    UITextRange *selectedRange = _backedTextInputView.selectedTextRange;
+    if ([_backedTextInputView offsetFromPosition:selectedRange.start toPosition:selectedRange.end] == 0) {
+        // If the selection length is zero, don't show the menu.
+        return;
+    }
 
     for(NSString *menuItemName in self.menuItems) {
         NSString *sel = [NSString stringWithFormat:@"%@%@", SELECTOR_CUSTOM, menuItemName];
@@ -109,38 +114,43 @@ UITextPosition* beginning;
 
 -(void) handleSingleTap: (UITapGestureRecognizer *) gesture
 {
-    CGPoint pos = [gesture locationInView:_backedTextInputView];
+       CGPoint pos = [gesture locationInView:_backedTextInputView];
     pos.y += _backedTextInputView.contentOffset.y;
 
     UITextPosition *tapPos = [_backedTextInputView closestPositionToPoint:pos];
-    UITextRange *word = [_backedTextInputView.tokenizer rangeEnclosingPosition:tapPos withGranularity:(UITextGranularityWord) inDirection:UITextLayoutDirectionRight];
+    UITextRange *word = [_backedTextInputView.tokenizer rangeEnclosingPosition:tapPos withGranularity:UITextGranularityWord inDirection:UITextLayoutDirectionRight];
 
-    UITextPosition* beginning = _backedTextInputView.beginningOfDocument;
+    if (!word) {
+        // If no word is found at the tap position, return without selecting anything.
+        return;
+    }
 
-    UITextPosition *selectionStart = word.start;
-    UITextPosition *selectionEnd = word.end;
+    // Calculate the start and end position of the selection in terms of the text view's content.
+    NSInteger location = [_backedTextInputView offsetFromPosition:_backedTextInputView.beginningOfDocument toPosition:word.start];
+    NSInteger length = [_backedTextInputView offsetFromPosition:word.start toPosition:word.end];
 
-    const NSInteger location = [_backedTextInputView offsetFromPosition:beginning toPosition:selectionStart];
-    const NSInteger endLocation = [_backedTextInputView offsetFromPosition:beginning toPosition:selectionEnd];
+    // Set the selected range to highlight the word
+    [_backedTextInputView setSelectedRange:NSMakeRange(location, length)];
 
-    self.onHighlightPress(@{
-        @"clickedRangeStart": @(location),
-        @"clickedRangeEnd": @(endLocation),
-    });
+    // Optionally, trigger the gesture handling logic if needed
+    // This is useful if you want to show the context menu after a single tap, similar to a long press.
+    // Uncomment the following line if needed.
+    [self _handleGesture];
 }
+
 
 -(void) handleLongPress: (UILongPressGestureRecognizer *) gesture
 {
-
     CGPoint pos = [gesture locationInView:_backedTextInputView];
     pos.y += _backedTextInputView.contentOffset.y;
 
     UITextPosition *tapPos = [_backedTextInputView closestPositionToPoint:pos];
-    UITextRange *word = [_backedTextInputView.tokenizer rangeEnclosingPosition:tapPos withGranularity:(UITextGranularityWord) inDirection:UITextLayoutDirectionRight];
-
+    UITextRange *word = [_backedTextInputView.tokenizer rangeEnclosingPosition:tapPos withGranularity:(UITextGranularityWord) inDirection:UITextWritingDirectionNatural];
 
     switch ([gesture state]) {
         case UIGestureRecognizerStateBegan:
+            if (_backedTextInputView.selectedTextRange != nil) return;
+            // log the word start
             selectionStart = word.start;
             break;
         case UIGestureRecognizerStateChanged:
@@ -181,6 +191,7 @@ UITextPosition* beginning;
 
 - (void)setAttributedText:(NSAttributedString *)attributedText
 {
+    // log setAttributedText start
     if (self.value) {
         NSAttributedString *str = [[NSAttributedString alloc] initWithString:self.value attributes:self.textAttributes.effectiveTextAttributes];
 
@@ -222,6 +233,7 @@ UITextPosition* beginning;
 
 - (void)forwardInvocation:(NSInvocation *)invocation
 {
+    // log forwardInvocation start
     NSString *sel = NSStringFromSelector([invocation selector]);
     NSRange match = [sel rangeOfString:SELECTOR_CUSTOM];
     if (match.location == 0) {
@@ -237,7 +249,7 @@ UITextPosition* beginning;
 }
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender
-{
+{    
     if(selectionStart != nil) {return NO;}
     NSString *sel = NSStringFromSelector(action);
     NSRange match = [sel rangeOfString:SELECTOR_CUSTOM];
@@ -250,7 +262,6 @@ UITextPosition* beginning;
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
     UIView *hitView = [super hitTest:point withEvent:event];
-    NSLog(@"Hit Test Start");
 
     // Check if the hit view is not part of the text view's hierarchy
     if (![_backedTextInputView isDescendantOfView:hitView]) {
