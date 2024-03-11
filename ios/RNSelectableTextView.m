@@ -82,7 +82,6 @@ UITextPosition* beginning;
 
 -(void) _handleGesture
 {
-    // log gesture start
     if (!_backedTextInputView.isFirstResponder) {
         [_backedTextInputView becomeFirstResponder];
     }
@@ -114,7 +113,7 @@ UITextPosition* beginning;
 
 -(void) handleSingleTap: (UITapGestureRecognizer *) gesture
 {
-       CGPoint pos = [gesture locationInView:_backedTextInputView];
+    CGPoint pos = [gesture locationInView:_backedTextInputView];
     pos.y += _backedTextInputView.contentOffset.y;
 
     UITextPosition *tapPos = [_backedTextInputView closestPositionToPoint:pos];
@@ -131,10 +130,6 @@ UITextPosition* beginning;
 
     // Set the selected range to highlight the word
     [_backedTextInputView setSelectedRange:NSMakeRange(location, length)];
-
-    // Optionally, trigger the gesture handling logic if needed
-    // This is useful if you want to show the context menu after a single tap, similar to a long press.
-    // Uncomment the following line if needed.
     [self _handleGesture];
 }
 
@@ -150,7 +145,6 @@ UITextPosition* beginning;
     switch ([gesture state]) {
         case UIGestureRecognizerStateBegan:
             if (_backedTextInputView.selectedTextRange != nil) return;
-            // log the word start
             selectionStart = word.start;
             break;
         case UIGestureRecognizerStateChanged:
@@ -191,7 +185,6 @@ UITextPosition* beginning;
 
 - (void)setAttributedText:(NSAttributedString *)attributedText
 {
-    // log setAttributedText start
     if (self.value) {
         NSAttributedString *str = [[NSAttributedString alloc] initWithString:self.value attributes:self.textAttributes.effectiveTextAttributes];
 
@@ -233,7 +226,6 @@ UITextPosition* beginning;
 
 - (void)forwardInvocation:(NSInvocation *)invocation
 {
-    // log forwardInvocation start
     NSString *sel = NSStringFromSelector([invocation selector]);
     NSRange match = [sel rangeOfString:SELECTOR_CUSTOM];
     if (match.location == 0) {
@@ -249,7 +241,7 @@ UITextPosition* beginning;
 }
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender
-{    
+{
     if(selectionStart != nil) {return NO;}
     NSString *sel = NSStringFromSelector(action);
     NSRange match = [sel rangeOfString:SELECTOR_CUSTOM];
