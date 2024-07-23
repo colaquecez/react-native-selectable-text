@@ -24,7 +24,7 @@ Typescript will give you an error saying that you need value to be defined. You 
 The reason we do this is because by using `textComponentsProps`, we can use nested text styles and everything just works. Example:
 
 ```javascript
-import { SelectableText } from "@rob117/react-native-selectable-text";
+import { SelectableText } from "@colaquecez/react-native-selectable-text";
 
 const child = (
     <Text style={ {color: 'orange'} } { ...props }>

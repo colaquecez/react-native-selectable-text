@@ -1,4 +1,4 @@
-package com.rob117.selectabletext;
+package com.colaquecez.selectabletext;
 
 import android.view.Menu;
 import android.view.MenuItem;

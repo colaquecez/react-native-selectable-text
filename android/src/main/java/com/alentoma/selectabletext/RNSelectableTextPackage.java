@@ -1,6 +1,6 @@
 
 
-package com.rob117.selectabletext;
+package com.colaquecez.selectabletext;
 
 import java.util.Arrays;
 import java.util.Collections;
