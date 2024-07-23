@@ -57,7 +57,7 @@ the `textComponentProps` child property must consist exclusively of `Text` (or s
 
 ## Getting started
 
-`$ yarn add @rob117/react-native-selectable-text`
+`$yarn add @colaquecez/react-native-selectable-text`
 
 ## This project does not auto-link for iOS, you MUST do the following
 
