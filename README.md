@@ -59,17 +59,6 @@ the `textComponentProps` child property must consist exclusively of `Text` (or s
 
 `$yarn add @colaquecez/react-native-selectable-text`
 
-## This project does not auto-link for iOS, you MUST do the following
-
-I don't know how to get auto-linking working, so do this instead:
-
-1. Add `pod 'react-native-selectable-text', :path => '../node_modules/@rob117/react-native-selectable-text'` to your projects podfile
-2. run `pod install`
-
-#### Android
-
-Do nothing. Should actually just work.
-
 ## Props
 | name | description | type | default |
 |--|--|--|--|
@@ -79,6 +68,7 @@ Do nothing. Should actually just work.
 | **style** | additional styles to be applied to text | Object | null |
 | **highlights** | array of text ranges that should be highlighted with an optional id | array({ id: string, start: int, end: int }) | [] |
 | **highlightColor** | highlight color |string | null |
+| **shouldShowMenuAction** | Show/hide the context menu | boolean | undefined |
 | **onHighlightPress** | called when the user taps the highlight  |(id: string) => void | () => {} |
 | **appendToChildren** | element to be added in the last line of text | ReactNode | null |
 | **TextComponent** | Text component used to render `value` | ReactNode | <Text> |
