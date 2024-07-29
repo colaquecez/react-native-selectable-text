@@ -1,6 +1,6 @@
 {
     "name": "@colaquecez/react-native-selectable-text",
-    "version": "1.60.1",
+    "version": "1.61.7",
     "description": "React Native component used to provide the features of pass different context menu items and events",
     "main": "index.ts",
     "homepage": "https://github.com/colaquecez/react-native-selectable-text",
@@ -12,10 +12,11 @@
     ],
     "author": "Filipe Colaquecez",
     "license": "MIT",
-    "devDependencies": {
+    "peerDependencies": {
+        "react": "*",
         "react-native": "*"
     },
-    "dependencies": {
-        "fast-memoize": "*"
+    "devDependencies": {
+        "react-native": "*"
     }
 }

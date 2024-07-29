@@ -188,7 +188,6 @@ UITextPosition* beginning;
 -(void) handleTap: (UITapGestureRecognizer *) gesture
 {
     [_backedTextInputView select:self];
-    [_backedTextInputView selectAll:self];
     [self _handleGesture];
 }
 
