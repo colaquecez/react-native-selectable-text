@@ -38,7 +38,6 @@ export interface SelectableTextProps {
   highlightColor?: ColorValue;
   style?: StyleProp<TextStyle>;
   onHighlightPress?: (id: string) => void;
-  appendToChildren?: ReactNode;
   TextComponent?: ReactNode;
   textValueProp?: string;
   textComponentProps?: TextProps | TextInputProps;
