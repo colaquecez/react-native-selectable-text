@@ -32,7 +32,6 @@ export interface SelectableTextProps {
     selectionStart: number;
     selectionEnd: number;
   }) => void;
-  prependToChild: ReactNode;
   menuItems: string[];
   highlights?: Array<IHighlights>;
   highlightColor?: ColorValue;
@@ -63,7 +62,6 @@ export const SelectableText = ({
   value = "",
   TextComponent,
   textComponentProps,
-  prependToChild,
   ...props
 }: SelectableTextProps) => {
   const TX = (TextComponent = TextComponent || Text) as Function;
