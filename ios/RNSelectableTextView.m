@@ -150,38 +150,34 @@ UITextPosition* beginning;
 
     switch ([gesture state]) {
         case UIGestureRecognizerStateBegan:
-            selectionStart = word.start;
+            if (word) {
+                selectionStart = word.start;
+            }
             break;
         case UIGestureRecognizerStateChanged:
+            if (word) {
+                UITextPosition *selectionEnd = word.end;
+                if (selectionStart && selectionEnd) {
+                    NSInteger location = [_backedTextInputView offsetFromPosition:beginning toPosition:selectionStart];
+                    NSInteger endLocation = [_backedTextInputView offsetFromPosition:beginning toPosition:selectionEnd];
+
+                    if (location > endLocation) {
+                        NSInteger temp = location;
+                        location = endLocation;
+                        endLocation = temp;
+                    }
+
+                    [_backedTextInputView setSelectedRange:NSMakeRange(location, endLocation - location)];
+                }
+            }
             break;
         case UIGestureRecognizerStateEnded:
-            selectionStart = nil;
             [self _handleGesture];
-            return;
+            selectionStart = nil;
+            break;
         default:
             break;
     }
-
-    UITextPosition *selectionEnd = word.end;
-    
-     if (!selectionStart || !selectionEnd) {
-        return;
-    }
-
-
-    NSInteger location = [_backedTextInputView offsetFromPosition:beginning toPosition:selectionStart];
-    NSInteger endLocation = [_backedTextInputView offsetFromPosition:beginning toPosition:selectionEnd];
-
-    // Ensure that location is not greater than endLocation
-    if (location > endLocation) {
-        NSInteger temp = location;
-        location = endLocation;
-        endLocation = temp;
-    }
-    if (location == 0 && endLocation == 0) return;
-
-    [_backedTextInputView select:self];
-    [_backedTextInputView setSelectedRange:NSMakeRange(location, endLocation - location)];
 
 }
 
