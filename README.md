@@ -1,4 +1,4 @@
-
+### I'm moving this lib to [here](https://github.com/colaquecez/expo-selectable-text), this implementation is better and it is using expo modules api.
 # react-native-selectable-text
 
 This is the updated version of @alentoma/react-native-selectable-text.
